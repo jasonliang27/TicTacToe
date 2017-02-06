@@ -3,8 +3,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include "version.h"
 #define base 3
-#define version "v1.2.0"
 
 int check_board[base][base];
 int first;
@@ -37,7 +37,7 @@ void show_points(void);
 char to_hex(int num);
 int getchr(void);
 void show_help(void);
-void change_first(void);
+int change_first(void);
 //process.c
 void clean_buffer(void);
 int check_win(void);
