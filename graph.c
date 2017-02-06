@@ -356,7 +356,7 @@ char to_hex(int num)
 void show_about(void)
 {
     clean_screen();
-    printf("三子棋游戏 %s\n\n",STATUS);
+    printf("井字棋游戏 %s\n\n",STATUS);
     printf("版本    : v%s_%s\n",FULLVERSION_STRING,STATUS_SHORT);
     printf("更新日期: %s.%s.%s\n",YEAR,MONTH,DATE);
     printf("\n按任意键返回.\n");
@@ -379,7 +379,7 @@ void show_help()
 {
     int i;
     clean_screen();
-    puts("三子棋帮助");
+    puts("井字棋帮助");
     putchar('\n');
     puts("按任意键退出帮助。");
     putchar('\n');
@@ -409,7 +409,7 @@ void show_help()
     puts("但这种方法我们不推荐您使用。");
     putchar('\n');
     puts("游戏规则：");
-    puts("    与现实中的三子棋规则相同。如有一方横、纵或斜的棋子形成一条线即可胜利。");
+    puts("    与现实中的井字棋规则相同。如有一方横、纵或斜的棋子形成一条线即可胜利。");
     putchar('\n');
     puts("按任意键退出帮助。");
     getch();
