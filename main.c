@@ -11,6 +11,7 @@ int main(void)
 
     //start
     int i,j;
+    first=PLAYER.num;
     for(i=0; i<base; i++)
         for(j=0; j<base; j++)
             check_board[i][j]=NONE.num;

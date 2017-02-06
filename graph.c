@@ -26,6 +26,7 @@ const char* MCE[]=
 //extern const char * AI;
 extern int getch(void);
 
+
 void show_checkboard()
 {
     int i;
@@ -205,7 +206,7 @@ void setting_put_tips(int code)
         "返回游戏",
         "退出游戏"
     };
-    const char change_piece_tip[]="1.玩家 2.AI 3.返回";
+    const char change_piece_tip[]="1.玩家 2.计算机 3.返回";
     switch(code)
     {
     case 0:
@@ -382,9 +383,9 @@ void show_points(void)
     int total=PLAYER.points+AI.points+NONE.points;
 
     if(PLAYER.points!=AI.points)
-    printf("玩家胜 %d 局,负 %d 局   计算机胜 %d 局,负 %d 局   平局 %d 局   %s %d 局   总共 %d 局\n",PLAYER.points,AI.points,AI.points,PLAYER.points,NONE.points,(PLAYER.points>AI.points)?"玩家领先计算机":"计算机领先玩家",abs(PLAYER.points-AI.points),total);
+        printf("玩家胜 %d 局,负 %d 局   计算机胜 %d 局,负 %d 局   平局 %d 局   %s %d 局   总共 %d 局\n",PLAYER.points,AI.points,AI.points,PLAYER.points,NONE.points,(PLAYER.points>AI.points)?"玩家领先计算机":"计算机领先玩家",abs(PLAYER.points-AI.points),total);
     else
-            printf("玩家胜 %d 局,负 %d 局   计算机胜 %d 局,负 %d 局   和棋 %d 局   玩家和计算机暂时打平   总共 %d 局\n",PLAYER.points,AI.points,AI.points,PLAYER.points,NONE.points,total);
+        printf("玩家胜 %d 局,负 %d 局   计算机胜 %d 局,负 %d 局   和棋 %d 局   玩家和计算机暂时打平   总共 %d 局\n",PLAYER.points,AI.points,AI.points,PLAYER.points,NONE.points,total);
 
 }
 
@@ -413,7 +414,7 @@ void show_help()
     putchar('\n');
     printf("按任意继续显示余下内容");
     getch();
-    for(i=1;i<60;i++)
+    for(i=1; i<60; i++)
         printf("\b");
     puts("一般地，您也可以输入:");
     putchar('\n');
@@ -428,4 +429,49 @@ void show_help()
     getch();
     show_default(0,0);
     puts("先输入横纵坐标，再单击回车(Enter)");
+}
+
+void change_first(void)
+{
+    int select;
+    puts("更改先下方将重置棋盘。是否继续?");
+    puts("1.是 2.否");
+    printf("请选择:_\b");
+    while((!scanf("%d",&select))||(select>3)||(select<1))
+    {
+        clean_screen();
+        clean_buffer();
+        puts("输入错误!请按提示输入!");
+        puts("更改先下方将重置棋盘。是否继续?");
+        puts("1.是 2.否");
+        printf("请选择:_\b");
+    }
+    clean_buffer();
+    clean_screen();
+    printf("现在先下方: %s \n 默认先下方: %s\n",((first==PLAYER.num)?"玩家":"计算机"),((first==PLAYER.num)?"玩家":"计算机"));
+    puts("1.玩家 2.计算机 3.返回");
+    printf("您想把先下方更改为:_\b");
+    while((!scanf("%d",&select))||(select>4)||(select<1))
+    {
+        clean_buffer();
+        clean_screen();
+        puts("输入错误!请按提示输入!");
+        printf("现在先下方: %s \n 默认先下方: %s\n",((first==PLAYER.num)?"玩家":"计算机"),((first==PLAYER.num)?"玩家":"计算机"));
+        puts("1.玩家 2.计算机 3.返回");
+        printf("您想把先下方更改为:_\b");
+    }
+    clean_buffer();
+    switch(select)
+    {
+    case 1:
+        first=PLAYER.num;
+        break;
+    case 2:
+        first=AI.num;
+        break;
+    case 3:
+        reset_checkboard();
+        return;
+    }
+
 }
