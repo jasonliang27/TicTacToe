@@ -1,27 +1,14 @@
 #include <string.h>
+#include <math.h>
 #include "CodeExchange.h"
 
-void show_checkboard(void);
-void refresh_checkboard(int x,int y,int value);
-void clean_screen(void);
-void user_input(void);
-void user_input_err(void);
-void entry_setting(void);
-void setting_put_tips(int code);
-void reset_checkboard(void);
-void change_piece(int code);
-void show_default(int isnewline,int iscleanbuffer);
-void change_colour(void);
-void show_colors(int mode);//used:change_color
-void show_about(void);
-char to_hex(int num);
-int getchr(void);
+
 
 //Var
 struct templat NONE= {0,"  ",0};
 struct templat PLAYER= {1,"√",0};
 struct templat AI= {2,"×"};
-const int count_func=7;//used:entry_setting;setting_put_tips
+const int count_func=8;//used:entry_setting;setting_put_tips
 int background_colour=0;
 int font_colour=7;
 enum change_modes {background,font};
@@ -29,18 +16,19 @@ enum change_modes {background,font};
 char AI[3]="×";*/
 const char* MCE[]=
 {
-    "请输入坐标(Format:x,y;输入 4,4 设置):x,y\b\b\b",
-    "请输入不介于 1 和 %d 的坐标！\n",
+    "请输入坐标(Format:x,y;输入 4,4 进入选项页面):x,y\b\b\b",
+    "请输入介于 1 和 %d 的坐标或 4,4 (选项指令)!\n",
     "请按格式输入！",
     "此处已有棋子!"
 };
 
 //extern const char * PLAYER;
 //extern const char * AI;
+extern int getch(void);
 
 void show_checkboard()
 {
-    int i,j;
+    int i;
     printf("   1   2    3\n");
     for(i=0; i<base; i++)
     {
@@ -57,16 +45,13 @@ void clean_screen(void)
 
 void user_input(void)
 {
-    int x,y,i;
-    int t=0;
-    char str[10];
-
+    int x,y;
+    char temp;
     while(1)
     {
-        char temp[9];
         printf(MCE[0]);
 
-        if(scanf("%d,%d",&x,&y)!=2)
+        if(scanf("%d%c%d",&x,&temp,&y)!=3)
         {
             user_input_err();
             puts(MCE[2]);
@@ -103,18 +88,30 @@ void user_input(void)
             chrx=(char)getchr();
             chrd=(char)getchr();
             chry=(char)getchr();*/
+            clean_buffer();
             refresh_checkboard(x-1,y-1,PLAYER.num);
-            break;
+            if(check_win())
+            {
+                reset_checkboard();
+                //clean_buffer();
+                return;
+            }
+
+            if(!response_advantages())
+                response_danger();
+            if(check_win())
+            {
+                reset_checkboard();
+                return;
+            }
         }
-
-
     }
 }
 
 void refresh_checkboard(int x,int y,int value)
 {
     check_board[x][y]=value;
-    show_default(1,1);
+    show_default(1,0);
 }
 
 void user_input_err(void)
@@ -129,12 +126,8 @@ int getchr(void)
 
 void entry_setting(void)
 {
-
-
-    int i;
     char input;
     int change_piece_choose;
-    int change_code;
     clean_screen();
     while(1)
     {
@@ -153,11 +146,13 @@ void entry_setting(void)
     switch(input)
     {
     case 1:
+        clean_buffer();
         reset_checkboard();
         break;
 
     case 2:
-        //todo:reset_point
+        AI.points=PLAYER.points=NONE.points=0;
+        show_default(1,0);
         break;
 
     case 3:
@@ -177,17 +172,20 @@ void entry_setting(void)
         else
             change_piece(change_piece_choose==1?PLAYER.num:(change_piece_choose==2?AI.num:NONE.num));
         break;
-    case 6:
+    case 7:
         show_default(1,1);
         break;
     case 4:
         change_colour();
         break;
-    case 7:
+    case 8:
         exit(0);
         break;
-    case 5:
+    case 6:
         show_about();
+        break;
+    case 5:
+        show_help();
         break;
     }
 
@@ -202,6 +200,7 @@ void setting_put_tips(int code)
         "重置计分",
         "更改棋子",
         "更改背景或字体颜色",
+        "使用说明",
         "关于程序",
         "返回游戏",
         "退出游戏"
@@ -240,7 +239,6 @@ void reset_checkboard(void)
 void change_piece(int code)
 {
     char input[3];
-    int ischagned=0;
 
     clean_screen();
     printf("\n更改前：%s\n更改后：_\b",code==1?PLAYER.piece:(code==2?AI.piece:NONE.piece));
@@ -289,6 +287,7 @@ void show_default(int isnewline,int iscleanbuffer)
         clean_buffer();
     clean_screen();
     show_checkboard();
+    show_points();
     if(isnewline)
         putchar('\n');
 }
@@ -300,7 +299,7 @@ void change_colour(void)
 
 
 
-    int i,input;
+    int input;
     char cmd[10];
     char unit,ten;
 
@@ -372,8 +371,61 @@ void show_about(void)
 {
     clean_screen();
     puts("三子棋游戏");
-    puts("v1.0.0");
+    puts(version);
     printf("\n按任意键返回.\n");
     getch();
     show_default(1,0);
+}
+
+void show_points(void)
+{
+    int total=PLAYER.points+AI.points+NONE.points;
+
+    if(PLAYER.points!=AI.points)
+    printf("玩家胜 %d 局,负 %d 局   计算机胜 %d 局,负 %d 局   平局 %d 局   %s %d 局   总共 %d 局\n",PLAYER.points,AI.points,AI.points,PLAYER.points,NONE.points,(PLAYER.points>AI.points)?"玩家领先计算机":"计算机领先玩家",abs(PLAYER.points-AI.points),total);
+    else
+            printf("玩家胜 %d 局,负 %d 局   计算机胜 %d 局,负 %d 局   和棋 %d 局   玩家和计算机暂时打平   总共 %d 局\n",PLAYER.points,AI.points,AI.points,PLAYER.points,NONE.points,total);
+
+}
+
+void show_help()
+{
+    int i;
+    clean_screen();
+    puts("三子棋帮助");
+    putchar('\n');
+    puts("按任意键退出帮助。");
+    putchar('\n');
+    puts("对弈方法:");
+    puts("    输入横纵坐标以定位棋子落位置。先输入行号，然后输入分隔符(默认半角逗号(,))，再输入列号，最后单击回车(Enter)。");
+    putchar('\n');
+    puts("   1    2    3");
+    puts("1  √ |    |   ");
+    puts("  --------------");
+    puts("2  × | × | 〇");
+    puts("  --------------");
+    puts("3     |    | √");
+    puts("       图1");
+    putchar('\n');
+    puts("    如图1，如果您想落子于圆圈(〇)处，您应输入:");
+    putchar('\n');
+    puts("                   2,3");
+    putchar('\n');
+    printf("按任意继续显示余下内容");
+    getch();
+    for(i=1;i<60;i++)
+        printf("\b");
+    puts("一般地，您也可以输入:");
+    putchar('\n');
+    puts("                   2-3");
+    putchar('\n');
+    puts("但这种方法我们不推荐您使用。");
+    putchar('\n');
+    puts("游戏规则：");
+    puts("    与现实中的三子棋规则相同。如有一方横、纵或斜的棋子形成一条线即可胜利。");
+    putchar('\n');
+    puts("按任意键退出帮助。");
+    getch();
+    show_default(0,0);
+    puts("先输入横纵坐标，再单击回车(Enter)");
 }
