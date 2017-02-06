@@ -357,7 +357,7 @@ void show_about(void)
 {
     clean_screen();
     printf("三子棋游戏 %s\n\n",STATUS);
-    printf("版本    : v%s%s\n",FULLVERSION_STRING,STATUS_SHORT);
+    printf("版本    : v%s_%s\n",FULLVERSION_STRING,STATUS_SHORT);
     printf("更新日期: %s.%s.%s\n",YEAR,MONTH,DATE);
     printf("\n按任意键返回.\n");
     getch();
@@ -421,7 +421,7 @@ int change_first(void)
 {
     int select;
     clean_screen();
-    puts("更改先下方将重置棋盘。是否继续?");
+    puts("更改先下方可能会重置棋盘。是否继续?");
     puts("1.是 2.否");
     printf("请选择:_\b");
     while((!scanf("%d",&select))||(select>3)||(select<1))
