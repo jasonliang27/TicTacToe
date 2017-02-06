@@ -2,18 +2,17 @@
 #include <math.h>
 #include "CodeExchange.h"
 
-
-
 //Var
 struct templat NONE= {0,"  ",0};
 struct templat PLAYER= {1,"√",0};
 struct templat AI= {2,"×"};
-const int count_func=8;//used:entry_setting;setting_put_tips
+const int count_func=9;//used:entry_setting;setting_put_tips
 int background_colour=0;
 int font_colour=7;
+int reset=0;
+int ischangefirst=0;
 enum change_modes {background,font};
-/*char PLAYER[3]="√";
-char AI[3]="×";*/
+
 const char* MCE[]=
 {
     "请输入坐标(Format:x,y;输入 4,4 进入选项页面):x,y\b\b\b",
@@ -50,6 +49,15 @@ void user_input(void)
     char temp;
     while(1)
     {
+
+        if(reset)
+        {
+            reset_checkboard();
+            show_default(1,0);
+            reset=0;
+            continue;
+        }
+
         printf(MCE[0]);
 
         if(scanf("%d%c%d",&x,&temp,&y)!=3)
@@ -58,56 +66,47 @@ void user_input(void)
             puts(MCE[2]);
             continue;
         }
-        else
+
+        if(x>base+1 || y>base+1 ||x<1||y<1)
         {
-            if(x>base+1 || y>base+1 ||x<1||y<1)
-            {
-                user_input_err();
-                printf(MCE[1],base);
-                continue;
-            }
-            if(x==4&&y==4)
-            {
-                entry_setting();
-                continue;
-            }
-            else if ((x==4&&y!=4)||(x!=4&&y==4))
-            {
-                user_input_err();
-                printf(MCE[1],base);
-                continue;
-            }
-            if(check_board[x-1][y-1]!=NONE.num)
-            {
-                user_input_err();
-                puts(MCE[3]);
-                continue;
-            }
-
-            /*Alternative
-            char chrx,chry,chrd;
-            chrx=(char)getchr();
-            chrd=(char)getchr();
-            chry=(char)getchr();*/
-            clean_buffer();
-            refresh_checkboard(x-1,y-1,PLAYER.num);
-            if(check_win())
-            {
-                reset_checkboard();
-                //clean_buffer();
-                return;
-            }
-
-            if(!response_advantages())
-                response_danger();
-            if(check_win())
-            {
-                reset_checkboard();
-                return;
-            }
+            user_input_err();
+            printf(MCE[1],base);
+            continue;
+        }
+        if(x==4&&y==4)
+        {
+            entry_setting();
+            continue;
+        }
+        else if ((x==4&&y!=4)||(x!=4&&y==4))
+        {
+            user_input_err();
+            printf(MCE[1],base);
+            continue;
+        }
+        if(check_board[x-1][y-1]!=NONE.num)
+        {
+            user_input_err();
+            puts(MCE[3]);
+            continue;
+        }
+        clean_buffer();
+        refresh_checkboard(x-1,y-1,PLAYER.num);
+        if(check_win())
+        {
+            reset_checkboard();
+            return;
+        }
+        if(!response_advantages())
+            response_danger();
+        if(check_win())
+        {
+            reset_checkboard();
+            return;
         }
     }
 }
+
 
 void refresh_checkboard(int x,int y,int value)
 {
@@ -132,7 +131,6 @@ void entry_setting(void)
     clean_screen();
     while(1)
     {
-
         setting_put_tips(0);
         input=getchr();
         input-='0';
@@ -146,17 +144,17 @@ void entry_setting(void)
     }
     switch(input)
     {
-    case 1:
+    case 1://重新开始
         clean_buffer();
         reset_checkboard();
         break;
 
-    case 2:
+    case 2://重置计分
         AI.points=PLAYER.points=NONE.points=0;
         show_default(1,0);
         break;
 
-    case 3:
+    case 3://更改棋子
         putchar('\n');
         setting_put_tips(2);
         printf("请选择:_\b");
@@ -173,20 +171,23 @@ void entry_setting(void)
         else
             change_piece(change_piece_choose==1?PLAYER.num:(change_piece_choose==2?AI.num:NONE.num));
         break;
-    case 7:
+    case 8://返回
         show_default(1,1);
         break;
-    case 4:
+    case 4://更改颜色
         change_colour();
         break;
-    case 8:
+    case 9://退出
         exit(0);
         break;
-    case 6:
+    case 7://关于
         show_about();
         break;
-    case 5:
+    case 6://使用说明
         show_help();
+        break;
+    case 5:
+        change_first();
         break;
     }
 
@@ -201,6 +202,7 @@ void setting_put_tips(int code)
         "重置计分",
         "更改棋子",
         "更改背景或字体颜色",
+        "更改先下方",
         "使用说明",
         "关于程序",
         "返回游戏",
@@ -234,6 +236,9 @@ void reset_checkboard(void)
     for(i=0; i<base; i++)
         for(j=0; j<base; j++)
             check_board[i][j]=0;
+    if(first==AI.num)
+        if(!response_advantages())
+            response_danger();
     show_default(1,0);
 }
 
@@ -247,7 +252,6 @@ void change_piece(int code)
     clean_buffer();
     if(input[0]=='\n')
         goto label_end;
-    //clean_buffer();
     code=(code==1?PLAYER.num:(code==2?AI.num:NONE.num));
     switch(code)
     {
@@ -265,13 +269,6 @@ void change_piece(int code)
             AI.piece[1]=input[1];
         AI.piece[2]='\0';
         break;
-    /*case 3:
-        memset(NONE.piece,' ',sizeof(char)*3);
-        NONE.piece[0]=input[0];
-        if(input[1]!='\0')
-            NONE.piece[1]=input[1];
-        NONE.piece[2]='\0';
-        break;*/
     case 3:
         show_default(1,0);
         break;
@@ -295,11 +292,6 @@ void show_default(int isnewline,int iscleanbuffer)
 
 void change_colour(void)
 {
-    /*const char* font_colours[]= {"淡绿色", "淡浅绿色", "淡红色", "淡紫色", "淡黄色", "亮白色"};
-    const char* background_colours[]={"黑色", "蓝色", "绿色", "浅绿色", "红色", "紫色", "黄色", "白色", "灰色", "淡蓝色"};*/
-
-
-
     int input;
     char cmd[10];
     char unit,ten;
@@ -313,15 +305,10 @@ void change_colour(void)
         printf("1.字体 2.背景\n请选择:_\b");
     }
     clean_screen();
-
-
     if(input==1)
         show_colors(font);
     else
         show_colors(background);
-
-
-
     strcpy(cmd,"color ");
     unit=to_hex(font_colour);
     ten=to_hex(background_colour);
@@ -337,7 +324,6 @@ void change_colour(void)
 
 void show_colors(int mode)
 {
-    //enum change_modes {background,font};
     int input,i;
     const char* colours[]= {"黑色","蓝色","绿色","浅绿色","红色","紫色","黄色","白色","灰色","淡蓝色","淡绿色","淡浅绿色","淡红色","淡紫色","淡黄色","亮白色"};//used:change_color
     for(i=0; i<16; i++)
@@ -355,7 +341,6 @@ void show_colors(int mode)
         font_colour=input-1;
     else
         background_colour=input-1;
-
 }
 
 char to_hex(int num)
@@ -371,8 +356,9 @@ char to_hex(int num)
 void show_about(void)
 {
     clean_screen();
-    puts("三子棋游戏");
-    puts(version);
+    printf("三子棋游戏 %s\n\n",STATUS);
+    printf("版本    : v%s%s\n",FULLVERSION_STRING,STATUS_SHORT);
+    printf("更新日期: %s.%s.%s\n",YEAR,MONTH,DATE);
     printf("\n按任意键返回.\n");
     getch();
     show_default(1,0);
@@ -431,9 +417,10 @@ void show_help()
     puts("先输入横纵坐标，再单击回车(Enter)");
 }
 
-void change_first(void)
+int change_first(void)
 {
     int select;
+    clean_screen();
     puts("更改先下方将重置棋盘。是否继续?");
     puts("1.是 2.否");
     printf("请选择:_\b");
@@ -448,30 +435,43 @@ void change_first(void)
     }
     clean_buffer();
     clean_screen();
-    printf("现在先下方: %s \n 默认先下方: %s\n",((first==PLAYER.num)?"玩家":"计算机"),((first==PLAYER.num)?"玩家":"计算机"));
-    puts("1.玩家 2.计算机 3.返回");
-    printf("您想把先下方更改为:_\b");
-    while((!scanf("%d",&select))||(select>4)||(select<1))
+    if(select==1)
     {
-        clean_buffer();
-        clean_screen();
-        puts("输入错误!请按提示输入!");
-        printf("现在先下方: %s \n 默认先下方: %s\n",((first==PLAYER.num)?"玩家":"计算机"),((first==PLAYER.num)?"玩家":"计算机"));
+        printf("现在先下方: %s \n默认先下方: %s\n",((first==PLAYER.num)?"玩家":"计算机"),"玩家");
         puts("1.玩家 2.计算机 3.返回");
         printf("您想把先下方更改为:_\b");
+        while((!scanf("%d",&select))||(select>4)||(select<1))
+        {
+            clean_buffer();
+            clean_screen();
+            puts("输入错误!请按提示输入!");
+            printf("现在先下方: %s \n 默认先下方: %s\n",((first==PLAYER.num)?"玩家":"计算机"),"玩家");
+            puts("1.玩家 2.计算机 3.返回");
+            printf("您想把先下方更改为:_\b");
+        }
+        clean_buffer();
+        switch(select)
+        {
+        case 1:
+            if(first!=PLAYER.num)
+                ischangefirst=reset=1;
+            first=PLAYER.num;
+            break;
+        case 2:
+            if(first!=AI.num)
+                ischangefirst=reset=1;
+            first=AI.num;
+            break;
+        case 3:
+            show_default(1,0);
+            return 0;
+        }
+        show_default(1,0);
     }
-    clean_buffer();
-    switch(select)
+    else
     {
-    case 1:
-        first=PLAYER.num;
-        break;
-    case 2:
-        first=AI.num;
-        break;
-    case 3:
-        reset_checkboard();
-        return;
+        show_default(1,0);
+        return 0;
     }
-
+    return 1;
 }
