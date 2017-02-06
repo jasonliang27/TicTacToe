@@ -205,17 +205,17 @@ int response_advantages(void)
     }
     {
         //0,0 1,1 2,2
-        if((check_board[0][0]==PLAYER.num)&&(check_board[1][1]==PLAYER.num)&&(check_board[2][2]==NONE.num))
+        if((check_board[0][0]==AI.num)&&(check_board[1][1]==AI.num)&&(check_board[2][2]==NONE.num))
         {
             refresh_checkboard(2,2,AI.num);
             return 1;
         }
-        if((check_board[0][0]==PLAYER.num)&&(check_board[2][2]==PLAYER.num)&&(check_board[1][1]==NONE.num))
+        if((check_board[0][0]==AI.num)&&(check_board[2][2]==AI.num)&&(check_board[1][1]==NONE.num))
         {
             refresh_checkboard(1,1,AI.num);
             return 1;
         }
-        if((check_board[1][1]==PLAYER.num)&&(check_board[2][2]==PLAYER.num)&&(check_board[0][0]==NONE.num))
+        if((check_board[1][1]==AI.num)&&(check_board[2][2]==AI.num)&&(check_board[0][0]==NONE.num))
         {
             refresh_checkboard(0,0,AI.num);
             return 1;
@@ -223,24 +223,22 @@ int response_advantages(void)
     }
     {
         //0,2 1,1 2,0
-        if((check_board[0][2]==PLAYER.num)&&(check_board[1][1]==PLAYER.num)&&(check_board[2][0]==NONE.num))
+        if((check_board[0][2]==AI.num)&&(check_board[1][1]==AI.num)&&(check_board[2][0]==NONE.num))
         {
             refresh_checkboard(2,0,AI.num);
             return 1;
         }
-        if((check_board[0][2]==PLAYER.num)&&(check_board[2][0]==PLAYER.num)&&(check_board[1][1]==NONE.num))
+        if((check_board[0][2]==AI.num)&&(check_board[2][0]==AI.num)&&(check_board[1][1]==NONE.num))
         {
             refresh_checkboard(1,1,AI.num);
             return 1;
         }
-        if((check_board[1][1]==PLAYER.num)&&(check_board[2][0]==PLAYER.num)&&(check_board[0][2]==NONE.num))
+        if((check_board[1][1]==AI.num)&&(check_board[2][0]==AI.num)&&(check_board[0][2]==NONE.num))
         {
             refresh_checkboard(0,2,AI.num);
             return 1;
         }
     }
-//label_end1:
-    ;
     return 0;
 }
 
@@ -296,6 +294,42 @@ int response_danger(void)
                 break;
             }
 
+        }
+    }
+     {
+        //0,0 1,1 2,2
+        if((check_board[0][0]==PLAYER.num)&&(check_board[1][1]==PLAYER.num)&&(check_board[2][2]==NONE.num))
+        {
+            refresh_checkboard(2,2,AI.num);
+            return 1;
+        }
+        if((check_board[0][0]==PLAYER.num)&&(check_board[2][2]==PLAYER.num)&&(check_board[1][1]==NONE.num))
+        {
+            refresh_checkboard(1,1,AI.num);
+            return 1;
+        }
+        if((check_board[1][1]==PLAYER.num)&&(check_board[2][2]==PLAYER.num)&&(check_board[0][0]==NONE.num))
+        {
+            refresh_checkboard(0,0,AI.num);
+            return 1;
+        }
+    }
+    {
+        //0,2 1,1 2,0
+        if((check_board[0][2]==PLAYER.num)&&(check_board[1][1]==PLAYER.num)&&(check_board[2][0]==NONE.num))
+        {
+            refresh_checkboard(2,0,AI.num);
+            return 1;
+        }
+        if((check_board[0][2]==PLAYER.num)&&(check_board[2][0]==PLAYER.num)&&(check_board[1][1]==NONE.num))
+        {
+            refresh_checkboard(1,1,AI.num);
+            return 1;
+        }
+        if((check_board[1][1]==PLAYER.num)&&(check_board[2][0]==PLAYER.num)&&(check_board[0][2]==NONE.num))
+        {
+            refresh_checkboard(0,2,AI.num);
+            return 1;
         }
     }
     return response_default();
