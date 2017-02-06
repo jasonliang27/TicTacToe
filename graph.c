@@ -298,10 +298,12 @@ void change_colour(void)
 
     clean_screen();
     printf("1.字体 2.背景\n请选择:_\b");
-    while(!scanf("%d",&input)||input>2||input<1)
+    while(((input=getchr()-'0'),1)&&(input>2||input<1))
     {
+        /*printf("%d",input);//debug
+        clean_buffer();//debug
+        getchar();//debug*/
         setting_put_tips(1);
-        clean_buffer();
         printf("1.字体 2.背景\n请选择:_\b");
     }
     clean_screen();
@@ -325,22 +327,24 @@ void change_colour(void)
 void show_colors(int mode)
 {
     int input,i;
-    const char* colours[]= {"黑色","蓝色","绿色","浅绿色","红色","紫色","黄色","白色","灰色","淡蓝色","淡绿色","淡浅绿色","淡红色","淡紫色","淡黄色","亮白色"};//used:change_color
-    for(i=0; i<16; i++)
-        printf("%d. %s   ",i+1,colours[i]);
+    const char* colours[]= {"黑色","蓝色","绿色","浅绿色","红色","紫色","黄色","白色","灰色","淡蓝色","淡绿色","淡浅绿色","淡红色","淡紫色","淡黄色","亮白色","返回"};//used:change_color
+    clean_buffer();
+    for(i=0; i<17; i++)
+        printf("%d. %s\n",i+1,colours[i]);
     printf("\n请选择%s颜色:_\b",mode?"字体":"背景");
-    while(!scanf("%d",&input)||input>16||input<1)
+    while((!scanf("%d",&input))||input>17||input<1)
     {
         setting_put_tips(1);
         clean_buffer();
-        for(i=0; i<16; i++)
+        for(i=0; i<17; i++)
             printf("%d. %s   ",i+1,colours[i]);
         printf("\n请选择%s颜色:_\b",mode?"字体":"背景");
     }
-    if(mode)
-        font_colour=input-1;
-    else
-        background_colour=input-1;
+    if(input!=17)
+        if(mode)
+            font_colour=input-1;
+        else
+            background_colour=input-1;
 }
 
 char to_hex(int num)
@@ -424,7 +428,7 @@ int change_first(void)
     puts("更改先下方可能会重置棋盘。是否继续?");
     puts("1.是 2.否");
     printf("请选择:_\b");
-    while((!scanf("%d",&select))||(select>3)||(select<1))
+    while(((select=getchr()-'0'),1)&&((select>2)||(select<1)))
     {
         clean_screen();
         clean_buffer();
@@ -440,7 +444,7 @@ int change_first(void)
         printf("现在先下方: %s \n默认先下方: %s\n",((first==PLAYER.num)?"玩家":"计算机"),"玩家");
         puts("1.玩家 2.计算机 3.返回");
         printf("您想把先下方更改为:_\b");
-        while((!scanf("%d",&select))||(select>4)||(select<1))
+        while(((select=getchr()-'0'),1)&&((select>3)||(select<1)))
         {
             clean_buffer();
             clean_screen();
@@ -449,7 +453,6 @@ int change_first(void)
             puts("1.玩家 2.计算机 3.返回");
             printf("您想把先下方更改为:_\b");
         }
-        clean_buffer();
         switch(select)
         {
         case 1:
