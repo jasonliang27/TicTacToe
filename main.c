@@ -8,6 +8,13 @@
 int main(void)
 {
 
+    /*int x;
+    while(1)
+    {
+        x=getchr();
+        printf("\nx=%d %c todec(x)=%d %c num>='a' %d 'a' %d xsalnum(x)=%d tolower(x)=%d %c isalpha(x)=%d isalpha(x)?tolower(x):x=%d\n\n",x,x,to_dec(x),to_dec(x),x>='a','a',isalnum(x),tolower(x),tolower(x),isalpha(x),isalpha(x)?tolower(x):x);
+    }*/
+
 
     //start
     int i,j;
