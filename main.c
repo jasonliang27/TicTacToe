@@ -7,8 +7,6 @@
 
 int main(void)
 {
-
-
     //start
     int i,j;
     first=PLAYER.num;
@@ -22,9 +20,6 @@ int main(void)
     putchar('\n');
     while(1)
         user_input();
-
-
-
 
     //end
     clean_buffer();

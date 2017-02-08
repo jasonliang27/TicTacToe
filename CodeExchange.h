@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <ctype.h>
 #include "version.h"
 #define base 3
 
@@ -12,10 +13,11 @@ struct templat
 {
     const int num;
     char piece[3];
+    char default_piece[3];
     int points;
 
 }PLAYER,AI,NONE;
-
+extern int getch(void);
 //function
 //main.c
 void initialise(void);//debug
@@ -35,6 +37,7 @@ void show_colors(int mode);//used:change_color
 void show_about(void);
 void show_points(void);
 char to_hex(int num);
+int to_dec(char num);
 int getchr(void);
 void show_help(void);
 int change_first(void);
