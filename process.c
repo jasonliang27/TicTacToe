@@ -147,11 +147,12 @@ void win(int code)
         printf("平局!\n");
     }
     puts("按任意键以开始下一场...");
-    clean_buffer();
+    getch();
 }
 
 int response_advantages(void)
 {
+    puts("思考中，请稍候...");
     {
         //row
         int i;
