@@ -168,12 +168,12 @@ void entry_setting(void)
         printf("请选择:_\b");
         while(((change_piece_choose=getchr()-'0'),1)&&(change_piece_choose>3||change_piece_choose<1))
         {
-            clean_buffer();
+            //clean_buffer();
             setting_put_tips(1);
             setting_put_tips(2);
             printf("请选择:_\b");
         }
-        clean_buffer();
+        //clean_buffer();
         if(change_piece_choose==3)
             show_default(1,0);
         else
@@ -183,7 +183,7 @@ void entry_setting(void)
         }
         break;
     case 8://返回
-        show_default(1,1);
+        show_default(1,0);
         break;
     case 4://更改颜色
         change_colour();
@@ -250,28 +250,51 @@ void reset_checkboard(void)
     if(first==AI.num)
         if(!response_advantages())
             response_danger();
+            t_s=clock();
     show_default(1,0);
 }
 
 void change_piece(int code)
 {
     char input[3];
-    int i,isctrl=0;
+    int i,isctrl=0,issame=0,loop=0;
 
-    printf("请输入更改后的棋子。\n如需返回请键入[Ctrl]+B; 如需恢复默认棋子键入[Ctrl]+D\n默认：%s\n更改前：%s\n更改后：_\b",(code==1?PLAYER.default_piece:(code==2?AI.default_piece:NONE.default_piece)),(code==1?PLAYER.piece:(code==2?AI.piece:NONE.piece)));
+    clean_screen();
+    printf("请输入更改后的棋子。\n如需返回请键入[Ctrl]+B; 如需恢复默认棋子键入[Ctrl]+D\n默认：%s\n更改前：%s\n更改后：_\b",(code==PLAYER.num?PLAYER.default_piece:(code==AI.num?AI.default_piece:NONE.default_piece)),(code==PLAYER.num?PLAYER.piece:(code==AI.num?AI.piece:NONE.piece)));
     scanf("%s",input);
-    for(i=0; i<3; i++)
-        isctrl=input[i]<'\040'?(input[i]=='\004'?isctrl:isctrl=1):isctrl;
-    while(isctrl)
+    input[2]='\0';
+    for(i=0; i<2; i++)
+        if(!(input[i]=='\0'||input[i]=='\002'||input[i]=='\004'))
+            isctrl=iscntrl(input[i])?1:isctrl;
+    for(i=0; i<2; i++)
+        issame=((input[i])==(*((code==PLAYER.num?AI.piece:PLAYER.piece)+i)));
+    clean_buffer();
+    if(strchr(input,'\004'))
+        for(i=0; i<2; i++)
+            loop=((!loop)?((code==PLAYER.num?(*(PLAYER.default_piece+i)):(*(AI.default_piece+i)))==(code==AI.num?(*(PLAYER.piece+i)):(*(AI.piece+i)))):loop);
+    while(isctrl||issame||loop)
     {
-        isctrl=0;
-        printf("请不要输入提示外的控制字符!\a\n请输入更改后的棋子。\n如需返回请键入[Ctrl]+B; 如需恢复默认棋子键入[Ctrl]+D\n默认：%s\n更改前：%s\n更改后：_\b",(code==1?PLAYER.default_piece:(code==2?AI.default_piece:NONE.default_piece)),(code==1?PLAYER.piece:(code==2?AI.piece:NONE.piece)));
         clean_screen();
+        if(issame)
+            printf("请不要输入与%s相同的棋子符号！\a\n",code==PLAYER.num?"计算机":"玩家");
+        if(isctrl)
+            printf("请不要输入提示外的控制字符!\a\n");
+        if(loop)
+            printf("默认棋子与%s棋子符号相同!\a请输入其他棋子符号。如需恢复%s默认棋子,请先返回,然后把%s的棋子更改为其他棋子符号,再来更改%s的棋子符号。\n",code==PLAYER.num?"计算机":"玩家",code==PLAYER.num?"玩家":"计算机",code==PLAYER.num?"计算机":"玩家",code==PLAYER.num?"玩家":"计算机");
+
+        isctrl=issame=loop=0;
+        printf("请输入更改后的棋子。\n如需返回请键入[Ctrl]+B; 如需恢复默认棋子键入[Ctrl]+D\n默认：%s\n更改前：%s\n更改后：_\b",(code==PLAYER.num?PLAYER.default_piece:(code==AI.num?AI.default_piece:NONE.default_piece)),(code==PLAYER.num?PLAYER.piece:(code==AI.num?AI.piece:NONE.piece)));
         scanf("%s",input);
         clean_buffer();
         //code=(code==1?PLAYER.num:(code==2?AI.num:NONE.num));
-        for(i=0; i<3; i++)
-            isctrl=input[i]<'\040'?(input[i]=='\004'?isctrl:isctrl=1):isctrl;
+        for(i=0; i<2; i++)
+            if(!(input[i]=='\0'||input[i]=='\002'||input[i]=='\004'))
+                isctrl=iscntrl(input[i])?1:isctrl;
+        for(i=0; i<2; i++)
+            issame=((input[i]==(*(code==PLAYER.num?AI.piece:PLAYER.piece)+i)?1:issame));
+        if(strchr(input,'\004'))
+            for(i=0; i<2; i++)
+                loop=((!loop)?((code==PLAYER.num?(*(PLAYER.default_piece+i)):(*(AI.default_piece+i)))==(code==AI.num?(*(PLAYER.piece+i)):(*(AI.piece+i)))):loop);
     }
     if(input[0]=='\n')
         return;
@@ -299,9 +322,7 @@ void change_piece(int code)
         show_default(1,0);
         break;
     }
-
     show_default(1,0);
-
 }
 
 void show_default(int isnewline,int iscleanbuffer)
@@ -333,7 +354,10 @@ void change_colour(void)
     }
     clean_screen();
     if(input==3)
+    {
+        show_default(1,0);
         return;
+    }
     show_colors(input==1);
     strcpy(cmd,"color ");
     unit=to_hex(font_colour);
@@ -351,7 +375,7 @@ void show_colors(int mode)
 {
     int input,i;
     const char* colours[]= {"黑色","蓝色","绿色","浅绿色","红色","紫色","黄色","白色","灰色","淡蓝色","淡绿色","淡浅绿色","淡红色","淡紫色","淡黄色","亮白色","返回"};//used:change_color
-    clean_buffer();
+    //clean_buffer();
     for(i=0; i<17; i++)
         printf("%c. %s\n",i>9?'a'+i-10:'0'+i,colours[i]);
     printf("\n请选择%s颜色:_\b",mode?"字体":"背景");
@@ -443,13 +467,13 @@ int change_first(void)
     while(((select=getchr()-'0'),1)&&((select>2)||(select<1)))
     {
         clean_screen();
-        clean_buffer();
+        //clean_buffer();
         puts("输入错误!请按提示输入!\a");
         puts("更改先下方将重置棋盘。是否继续?");
         puts("1.是 2.否");
         printf("请选择:_\b");
     }
-    clean_buffer();
+    //clean_buffer();
     clean_screen();
     if(select==1)
     {
@@ -458,7 +482,7 @@ int change_first(void)
         printf("您想把先下方更改为:_\b");
         while(((select=getchr()-'0'),1)&&((select>3)||(select<1)))
         {
-            clean_buffer();
+            //clean_buffer();
             clean_screen();
             puts("输入错误!请按提示输入!\a");
             printf("现在先下方: %s \n 默认先下方: %s\n",((first==PLAYER.num)?"玩家":"计算机"),"玩家");

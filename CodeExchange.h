@@ -9,6 +9,7 @@
 
 int check_board[base][base];
 int first;
+clock_t t_s;//time of start
 struct templat
 {
     const int num;
