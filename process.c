@@ -1,6 +1,8 @@
 #include "CodeExchange.h"
-#include <time.h>
 
+
+clock_t t_c;//time consuming
+clock_t t_max=(clock_t)0,t_min;//time of max/min
 
 void clean_buffer(void)
 {
@@ -128,9 +130,9 @@ int check_win(void)
 
 void win(int code)
 {
-
-
-    //clean_screen();
+    t_c=clock()-t_s;
+    if(first--)
+        t_min=t_c;
     if(code==PLAYER.num)
     {
         PLAYER.points++;
@@ -146,8 +148,12 @@ void win(int code)
         NONE.points++;
         printf("平局!\n");
     }
+    t_max=(t_c>t_max)?t_c:t_max;
+    t_min=(t_c<t_min)?t_c:t_min;
+    printf("本局耗时 %.3f 秒。最多耗时 %.3f 秒, 最少耗时 %.3f 秒。\n",(float)t_c/CLOCKS_PER_SEC,(float)t_max/CLOCKS_PER_SEC,(float)t_min/CLOCKS_PER_SEC);
     puts("按任意键以开始下一场...");
     getch();
+    t_s=clock();
 }
 
 int response_advantages(void)
@@ -155,7 +161,7 @@ int response_advantages(void)
     puts("思考中，请稍候...");
     {
         //row
-        int i;
+        register int i;
         for(i=0; i<base; i++)
         {
             if((check_board[i][0]==AI.num)&&(check_board[i][1]==AI.num)&&(check_board[i][2]==NONE.num))
@@ -181,7 +187,7 @@ int response_advantages(void)
     {
         //col
 
-        int i;
+        register int i;
         for(i=0; i<base; i++)
         {
             if((check_board[0][i]==AI.num)&&(check_board[1][i]==AI.num)&&(check_board[2][i]==NONE.num))

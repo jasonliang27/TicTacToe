@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include "CodeExchange.h"
 
-
-
+extern clock_t t_s;
+int first_t=1;//first for timing(process.c)
 
 int main(void)
 {
@@ -27,6 +27,7 @@ int main(void)
     system("title TicTacToe");
     show_default(0,0);
     putchar('\n');
+    t_s=clock();
     while(1)
         user_input();
 
@@ -34,8 +35,8 @@ int main(void)
 
 
     //end
-    clean_buffer();
-    getchar();
+    //clean_buffer();
+    //getchar();
 
     return 0;
 }
