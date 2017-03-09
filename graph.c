@@ -15,8 +15,8 @@ enum change_modes {background,font};
 
 const char* MCE[]=
 {
-    "请输入坐标(Format:x,y;输入 4,4 进入选项页面):x,y\b\b\b",
-    "请输入介于 1 和 %d 的坐标或 4,4 (选项指令)!\a\n",
+    "请输入坐标(Format:x,y):x,y\b\b\b",
+    "请输入介于 1 和 %d 的坐标或键入 4,4 (进入选项页面)!\a\n",
     "请按格式输入！\a",
     "此处已有棋子!\a",
     "请输入数字!\a"
@@ -250,7 +250,7 @@ void reset_checkboard(void)
     if(first==AI.num)
         if(!response_advantages())
             response_danger();
-            t_s=clock();
+    t_s=clock();
     show_default(1,0);
 }
 
@@ -302,20 +302,21 @@ void change_piece(int code)
         return;
     if(strchr(input,'\004'))
         strcpy(input,(code==1?PLAYER.default_piece:AI.default_piece));
+        else
     switch(code)
     {
     case 1:
         memset(PLAYER.piece,' ',sizeof(char)*3);
-        PLAYER.piece[0]=input[0];
-        if(input[1]!='\0')
-            PLAYER.piece[1]=input[1];
+        /*if(input[1]!='\0')
+            PLAYER.piece[1]=input[1];*/
+            strcpy(PLAYER.piece,input);
         PLAYER.piece[2]='\0';
         break;
     case 2:
-        memset(AI.piece,' ',sizeof(char)*3);
-        AI.piece[0]=input[0];
-        if(input[1]!='\0')
-            AI.piece[1]=input[1];
+        memset(AI.piece,' ',sizeof(char)*3);;
+        /*if(input[1]!='\0')
+            AI.piece[1]=input[1];*/
+            strcpy(AI.piece,input);
         AI.piece[2]='\0';
         break;
     case 3:
@@ -373,14 +374,21 @@ void change_colour(void)
 
 void show_colors(int mode)
 {
-    int input,i;
+    int input,i,same=0;
     const char* colours[]= {"黑色","蓝色","绿色","浅绿色","红色","紫色","黄色","白色","灰色","淡蓝色","淡绿色","淡浅绿色","淡红色","淡紫色","淡黄色","亮白色","返回"};//used:change_color
     //clean_buffer();
     for(i=0; i<17; i++)
         printf("%c. %s\n",i>9?'a'+i-10:'0'+i,colours[i]);
     printf("\n请选择%s颜色:_\b",mode?"字体":"背景");
-    while(((input=getchr()),1)&&((!isalnum(input))||to_dec(input)>17||to_dec(input)<1))
+    while(((input=getchr()),1)&&((!isalnum(input))||to_dec(input)>17||to_dec(input)<0||(same=(to_dec(input)==(mode?background_colour:font_colour)))))
     {
+        if(same)
+        {
+            clean_screen();
+            printf("\a背景颜色和字体颜色不能相同!\n");
+            same=0;
+        }
+        else
         setting_put_tips(1);
         for(i=0; i<17; i++)
             printf("%c. %s\n",i>9?'a'+i-10:'0'+i,colours[i]);
@@ -403,7 +411,7 @@ char to_hex(int num)
 int to_dec(char num)
 {
     num=tolower(num);
-    return (num>='a'?num-'a'+10:num);
+    return (num>='a'?num-'a'+10:num-'0');
 }
 
 void show_about(void)
@@ -422,9 +430,9 @@ void show_points(void)
     int total=PLAYER.points+AI.points+NONE.points;
 
     if(PLAYER.points!=AI.points)
-        printf("玩家胜 %d 局,负 %d 局   计算机胜 %d 局,负 %d 局   平局 %d 局   %s %d 局   总共 %d 局\n",PLAYER.points,AI.points,AI.points,PLAYER.points,NONE.points,(PLAYER.points>AI.points)?"玩家领先计算机":"计算机领先玩家",abs(PLAYER.points-AI.points),total);
+        printf("玩家胜 %d 局,负 %d 局   计算机胜 %d 局,负 %d 局   平局 %d 局   %s %d 局   总共 %d 局\n如需进入选项页面,请键入4,4\n",PLAYER.points,AI.points,AI.points,PLAYER.points,NONE.points,(PLAYER.points>AI.points)?"玩家领先计算机":"计算机领先玩家",abs(PLAYER.points-AI.points),total);
     else
-        printf("玩家胜 %d 局,负 %d 局   计算机胜 %d 局,负 %d 局   和棋 %d 局   玩家和计算机暂时打平   总共 %d 局\n",PLAYER.points,AI.points,AI.points,PLAYER.points,NONE.points,total);
+        printf("玩家胜 %d 局,负 %d 局   计算机胜 %d 局,负 %d 局   和棋 %d 局   玩家和计算机暂时打平   总共 %d 局\n如需进入选项页面,请键入4,4\n",PLAYER.points,AI.points,AI.points,PLAYER.points,NONE.points,total);
 
 }
 
