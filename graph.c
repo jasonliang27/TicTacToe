@@ -4,8 +4,8 @@
 
 //Var
 struct templat NONE= {0,"  ","  ",0};
-struct templat PLAYER= {1,"¡Ì","¡Ì",0};
-struct templat AI= {2,"¡Á","¡Á",0};
+struct templat PLAYER= {1,"âˆš","âˆš",0};
+struct templat AI= {2,"Ã—","Ã—",0};
 const int count_func=9;//used:entry_setting;setting_put_tips
 int background_colour=0;
 int font_colour=7;
@@ -15,11 +15,11 @@ enum change_modes {background,font};
 
 const char* MCE[]=
 {
-    "ÇëÊäÈë×ø±ê(Format:x,y):x,y\b\b\b",
-    "ÇëÊäÈë½éÓÚ 1 ºÍ %d µÄ×ø±ê»ò¼üÈë 4,4 (½øÈëÑ¡ÏîÒ³Ãæ)!\a\n",
-    "Çë°´¸ñÊ½ÊäÈë£¡\a",
-    "´Ë´¦ÒÑÓÐÆå×Ó!\a",
-    "ÇëÊäÈëÊý×Ö!\a"
+    "è¯·è¾“å…¥åæ ‡(Format:x,y):x,y\b\b\b",
+    "è¯·è¾“å…¥ä»‹äºŽ 1 å’Œ %d çš„åæ ‡æˆ–é”®å…¥ 4,4 (è¿›å…¥é€‰é¡¹é¡µé¢)!\a\n",
+    "è¯·æŒ‰æ ¼å¼è¾“å…¥ï¼\a",
+    "æ­¤å¤„å·²æœ‰æ£‹å­!\a",
+    "è¯·è¾“å…¥æ•°å­—!\a"
 };
 
 //extern const char * PLAYER;
@@ -153,25 +153,25 @@ void entry_setting(void)
     }
     switch(input)
     {
-    case 1://ÖØÐÂ¿ªÊ¼
+    case 1://é‡æ–°å¼€å§‹
         reset_checkboard();
         break;
 
-    case 2://ÖØÖÃ¼Æ·Ö
+    case 2://é‡ç½®è®¡åˆ†
         AI.points=PLAYER.points=NONE.points=0;
         show_default(1,0);
         break;
 
-    case 3://¸ü¸ÄÆå×Ó
+    case 3://æ›´æ”¹æ£‹å­
         putchar('\n');
         setting_put_tips(2);
-        printf("ÇëÑ¡Ôñ:_\b");
+        printf("è¯·é€‰æ‹©:_\b");
         while(((change_piece_choose=getchr()-'0'),1)&&(change_piece_choose>3||change_piece_choose<1))
         {
             //clean_buffer();
             setting_put_tips(1);
             setting_put_tips(2);
-            printf("ÇëÑ¡Ôñ:_\b");
+            printf("è¯·é€‰æ‹©:_\b");
         }
         //clean_buffer();
         if(change_piece_choose==3)
@@ -182,19 +182,19 @@ void entry_setting(void)
             show_default(1,0);
         }
         break;
-    case 8://·µ»Ø
+    case 8://è¿”å›ž
         show_default(1,0);
         break;
-    case 4://¸ü¸ÄÑÕÉ«
+    case 4://æ›´æ”¹é¢œè‰²
         change_colour();
         break;
-    case 9://ÍË³ö
+    case 9://é€€å‡º
         exit(0);
         break;
-    case 7://¹ØÓÚ
+    case 7://å…³äºŽ
         show_about();
         break;
-    case 6://Ê¹ÓÃËµÃ÷
+    case 6://ä½¿ç”¨è¯´æ˜Ž
         show_help();
         break;
     case 5:
@@ -209,28 +209,28 @@ void setting_put_tips(int code)
     int i;
     const char* tips[]=
     {
-        "ÖØÐÂ¿ªÊ¼",
-        "ÖØÖÃ¼Æ·Ö",
-        "¸ü¸ÄÆå×Ó",
-        "¸ü¸Ä±³¾°»ò×ÖÌåÑÕÉ«",
-        "¸ü¸ÄÏÈÏÂ·½",
-        "Ê¹ÓÃËµÃ÷",
-        "¹ØÓÚ³ÌÐò",
-        "·µ»ØÓÎÏ·",
-        "ÍË³öÓÎÏ·"
+        "é‡æ–°å¼€å§‹",
+        "é‡ç½®è®¡åˆ†",
+        "æ›´æ”¹æ£‹å­",
+        "æ›´æ”¹èƒŒæ™¯æˆ–å­—ä½“é¢œè‰²",
+        "æ›´æ”¹å…ˆä¸‹æ–¹",
+        "ä½¿ç”¨è¯´æ˜Ž",
+        "å…³äºŽç¨‹åº",
+        "è¿”å›žæ¸¸æˆ",
+        "é€€å‡ºæ¸¸æˆ"
     };
-    const char change_piece_tip[]="1.Íæ¼Ò 2.¼ÆËã»ú 3.·µ»Ø";
+    const char change_piece_tip[]="1.çŽ©å®¶ 2.è®¡ç®—æœº 3.è¿”å›ž";
     switch(code)
     {
     case 0:
         for(i=0; i<count_func; i++)
             printf("%d. %s\n",i+1,tips[i]);
-        printf("\nÇëÑ¡Ôñ:_\b");
+        printf("\nè¯·é€‰æ‹©:_\b");
         break;
     case 1:
         clean_screen();
         putchar('\a');
-        puts("ÊäÈë´íÎó£¡Çë°´ÌáÊ¾ÊäÈë£¡\a");
+        puts("è¾“å…¥é”™è¯¯ï¼è¯·æŒ‰æç¤ºè¾“å…¥ï¼\a");
         break;
     case 2:
         clean_screen();
@@ -260,7 +260,7 @@ void change_piece(int code)
     int i,isctrl=0,issame=0,loop=0;
 
     clean_screen();
-    printf("ÇëÊäÈë¸ü¸ÄºóµÄÆå×Ó¡£\nÈçÐè·µ»ØÇë¼üÈë[Ctrl]+B; ÈçÐè»Ö¸´Ä¬ÈÏÆå×Ó¼üÈë[Ctrl]+D\nÄ¬ÈÏ£º%s\n¸ü¸ÄÇ°£º%s\n¸ü¸Äºó£º_\b",(code==PLAYER.num?PLAYER.default_piece:(code==AI.num?AI.default_piece:NONE.default_piece)),(code==PLAYER.num?PLAYER.piece:(code==AI.num?AI.piece:NONE.piece)));
+    printf("è¯·è¾“å…¥æ›´æ”¹åŽçš„æ£‹å­ã€‚\nå¦‚éœ€è¿”å›žè¯·é”®å…¥[Ctrl]+B; å¦‚éœ€æ¢å¤é»˜è®¤æ£‹å­é”®å…¥[Ctrl]+D\né»˜è®¤ï¼š%s\næ›´æ”¹å‰ï¼š%s\næ›´æ”¹åŽï¼š_\b",(code==PLAYER.num?PLAYER.default_piece:(code==AI.num?AI.default_piece:NONE.default_piece)),(code==PLAYER.num?PLAYER.piece:(code==AI.num?AI.piece:NONE.piece)));
     scanf("%s",input);
     input[2]='\0';
     for(i=0; i<2; i++)
@@ -276,14 +276,14 @@ void change_piece(int code)
     {
         clean_screen();
         if(issame)
-            printf("Çë²»ÒªÊäÈëÓë%sÏàÍ¬µÄÆå×Ó·ûºÅ£¡\a\n",code==PLAYER.num?"¼ÆËã»ú":"Íæ¼Ò");
+            printf("è¯·ä¸è¦è¾“å…¥ä¸Ž%sç›¸åŒçš„æ£‹å­ç¬¦å·ï¼\a\n",code==PLAYER.num?"è®¡ç®—æœº":"çŽ©å®¶");
         if(isctrl)
-            printf("Çë²»ÒªÊäÈëÌáÊ¾ÍâµÄ¿ØÖÆ×Ö·û!\a\n");
+            printf("è¯·ä¸è¦è¾“å…¥æç¤ºå¤–çš„æŽ§åˆ¶å­—ç¬¦!\a\n");
         if(loop)
-            printf("Ä¬ÈÏÆå×ÓÓë%sÆå×Ó·ûºÅÏàÍ¬!\aÇëÊäÈëÆäËûÆå×Ó·ûºÅ¡£ÈçÐè»Ö¸´%sÄ¬ÈÏÆå×Ó,ÇëÏÈ·µ»Ø,È»ºó°Ñ%sµÄÆå×Ó¸ü¸ÄÎªÆäËûÆå×Ó·ûºÅ,ÔÙÀ´¸ü¸Ä%sµÄÆå×Ó·ûºÅ¡£\n",code==PLAYER.num?"¼ÆËã»ú":"Íæ¼Ò",code==PLAYER.num?"Íæ¼Ò":"¼ÆËã»ú",code==PLAYER.num?"¼ÆËã»ú":"Íæ¼Ò",code==PLAYER.num?"Íæ¼Ò":"¼ÆËã»ú");
+            printf("é»˜è®¤æ£‹å­ä¸Ž%sæ£‹å­ç¬¦å·ç›¸åŒ!\aè¯·è¾“å…¥å…¶ä»–æ£‹å­ç¬¦å·ã€‚å¦‚éœ€æ¢å¤%sé»˜è®¤æ£‹å­,è¯·å…ˆè¿”å›ž,ç„¶åŽæŠŠ%sçš„æ£‹å­æ›´æ”¹ä¸ºå…¶ä»–æ£‹å­ç¬¦å·,å†æ¥æ›´æ”¹%sçš„æ£‹å­ç¬¦å·ã€‚\n",code==PLAYER.num?"è®¡ç®—æœº":"çŽ©å®¶",code==PLAYER.num?"çŽ©å®¶":"è®¡ç®—æœº",code==PLAYER.num?"è®¡ç®—æœº":"çŽ©å®¶",code==PLAYER.num?"çŽ©å®¶":"è®¡ç®—æœº");
 
         isctrl=issame=loop=0;
-        printf("ÇëÊäÈë¸ü¸ÄºóµÄÆå×Ó¡£\nÈçÐè·µ»ØÇë¼üÈë[Ctrl]+B; ÈçÐè»Ö¸´Ä¬ÈÏÆå×Ó¼üÈë[Ctrl]+D\nÄ¬ÈÏ£º%s\n¸ü¸ÄÇ°£º%s\n¸ü¸Äºó£º_\b",(code==PLAYER.num?PLAYER.default_piece:(code==AI.num?AI.default_piece:NONE.default_piece)),(code==PLAYER.num?PLAYER.piece:(code==AI.num?AI.piece:NONE.piece)));
+        printf("è¯·è¾“å…¥æ›´æ”¹åŽçš„æ£‹å­ã€‚\nå¦‚éœ€è¿”å›žè¯·é”®å…¥[Ctrl]+B; å¦‚éœ€æ¢å¤é»˜è®¤æ£‹å­é”®å…¥[Ctrl]+D\né»˜è®¤ï¼š%s\næ›´æ”¹å‰ï¼š%s\næ›´æ”¹åŽï¼š_\b",(code==PLAYER.num?PLAYER.default_piece:(code==AI.num?AI.default_piece:NONE.default_piece)),(code==PLAYER.num?PLAYER.piece:(code==AI.num?AI.piece:NONE.piece)));
         scanf("%s",input);
         clean_buffer();
         //code=(code==1?PLAYER.num:(code==2?AI.num:NONE.num));
@@ -344,14 +344,14 @@ void change_colour(void)
     char unit,ten;
 
     clean_screen();
-    printf("1.×ÖÌå\n2.±³¾°\n3.·µ»Ø\nÇëÑ¡Ôñ:_\b");
+    printf("1.å­—ä½“\n2.èƒŒæ™¯\n3.è¿”å›ž\nè¯·é€‰æ‹©:_\b");
     while(((input=getchr()-'0'),1)&&(input>3||input<1))
     {
         /*printf("%d",input);//debug
         clean_buffer();//debug
         getchar();//debug*/
         setting_put_tips(1);
-        printf("1.×ÖÌå\n2.±³¾°\n3.·µ»Ø\nÇëÑ¡Ôñ:_\b");
+        printf("1.å­—ä½“\n2.èƒŒæ™¯\n3.è¿”å›ž\nè¯·é€‰æ‹©:_\b");
     }
     clean_screen();
     if(input==3)
@@ -375,24 +375,24 @@ void change_colour(void)
 void show_colors(int mode)
 {
     int input,i,same=0;
-    const char* colours[]= {"ºÚÉ«","À¶É«","ÂÌÉ«","Ç³ÂÌÉ«","ºìÉ«","×ÏÉ«","»ÆÉ«","°×É«","»ÒÉ«","µ­À¶É«","µ­ÂÌÉ«","µ­Ç³ÂÌÉ«","µ­ºìÉ«","µ­×ÏÉ«","µ­»ÆÉ«","ÁÁ°×É«","·µ»Ø"};//used:change_color
+    const char* colours[]= {"é»‘è‰²","è“è‰²","ç»¿è‰²","æµ…ç»¿è‰²","çº¢è‰²","ç´«è‰²","é»„è‰²","ç™½è‰²","ç°è‰²","æ·¡è“è‰²","æ·¡ç»¿è‰²","æ·¡æµ…ç»¿è‰²","æ·¡çº¢è‰²","æ·¡ç´«è‰²","æ·¡é»„è‰²","äº®ç™½è‰²","è¿”å›ž"};//used:change_color
     //clean_buffer();
     for(i=0; i<17; i++)
         printf("%c. %s\n",i>9?'a'+i-10:'0'+i,colours[i]);
-    printf("\nÇëÑ¡Ôñ%sÑÕÉ«:_\b",mode?"×ÖÌå":"±³¾°");
+    printf("\nè¯·é€‰æ‹©%sé¢œè‰²:_\b",mode?"å­—ä½“":"èƒŒæ™¯");
     while(((input=getchr()),1)&&((!isalnum(input))||to_dec(input)>17||to_dec(input)<0||(same=(to_dec(input)==(mode?background_colour:font_colour)))))
     {
         if(same)
         {
             clean_screen();
-            printf("\a±³¾°ÑÕÉ«ºÍ×ÖÌåÑÕÉ«²»ÄÜÏàÍ¬!\n");
+            printf("\aèƒŒæ™¯é¢œè‰²å’Œå­—ä½“é¢œè‰²ä¸èƒ½ç›¸åŒ!\n");
             same=0;
         }
         else
         setting_put_tips(1);
         for(i=0; i<17; i++)
             printf("%c. %s\n",i>9?'a'+i-10:'0'+i,colours[i]);
-        printf("\nÇëÑ¡Ôñ%sÑÕÉ«:_\b",mode?"×ÖÌå":"±³¾°");
+        printf("\nè¯·é€‰æ‹©%sé¢œè‰²:_\b",mode?"å­—ä½“":"èƒŒæ™¯");
     }
     if(input!='g')
     {
@@ -417,10 +417,10 @@ int to_dec(char num)
 void show_about(void)
 {
     clean_screen();
-    printf("¾®×ÖÆåÓÎÏ· %s\n\n",STATUS);
-    printf("°æ±¾    : v%s_%s\n",FULLVERSION_STRING,STATUS_SHORT);
-    printf("¸üÐÂÈÕÆÚ: %s.%s.%s\n",YEAR,MONTH,DATE);
-    printf("\n°´ÈÎÒâ¼ü·µ»Ø.\n");
+    printf("äº•å­—æ£‹æ¸¸æˆ %s\n\n",STATUS);
+    printf("ç‰ˆæœ¬    : v%s_%s\n",FULLVERSION_STRING,STATUS_SHORT);
+    printf("æ›´æ–°æ—¥æœŸ: %s.%s.%s\n",YEAR,MONTH,DATE);
+    printf("\næŒ‰ä»»æ„é”®è¿”å›ž.\n");
     getch();
     show_default(1,0);
 }
@@ -430,72 +430,72 @@ void show_points(void)
     int total=PLAYER.points+AI.points+NONE.points;
 
     if(PLAYER.points!=AI.points)
-        printf("Íæ¼ÒÊ¤ %d ¾Ö,¸º %d ¾Ö   ¼ÆËã»úÊ¤ %d ¾Ö,¸º %d ¾Ö   Æ½¾Ö %d ¾Ö   %s %d ¾Ö   ×Ü¹² %d ¾Ö\nÈçÐè½øÈëÑ¡ÏîÒ³Ãæ,Çë¼üÈë4,4\n",PLAYER.points,AI.points,AI.points,PLAYER.points,NONE.points,(PLAYER.points>AI.points)?"Íæ¼ÒÁìÏÈ¼ÆËã»ú":"¼ÆËã»úÁìÏÈÍæ¼Ò",abs(PLAYER.points-AI.points),total);
+        printf("çŽ©å®¶èƒœ %d å±€,è´Ÿ %d å±€   è®¡ç®—æœºèƒœ %d å±€,è´Ÿ %d å±€   å¹³å±€ %d å±€   %s %d å±€   æ€»å…± %d å±€\nå¦‚éœ€è¿›å…¥é€‰é¡¹é¡µé¢,è¯·é”®å…¥ 4,4\n",PLAYER.points,AI.points,AI.points,PLAYER.points,NONE.points,(PLAYER.points>AI.points)?"çŽ©å®¶é¢†å…ˆè®¡ç®—æœº":"è®¡ç®—æœºé¢†å…ˆçŽ©å®¶",abs(PLAYER.points-AI.points),total);
     else
-        printf("Íæ¼ÒÊ¤ %d ¾Ö,¸º %d ¾Ö   ¼ÆËã»úÊ¤ %d ¾Ö,¸º %d ¾Ö   ºÍÆå %d ¾Ö   Íæ¼ÒºÍ¼ÆËã»úÔÝÊ±´òÆ½   ×Ü¹² %d ¾Ö\nÈçÐè½øÈëÑ¡ÏîÒ³Ãæ,Çë¼üÈë4,4\n",PLAYER.points,AI.points,AI.points,PLAYER.points,NONE.points,total);
+        printf("çŽ©å®¶èƒœ %d å±€,è´Ÿ %d å±€   è®¡ç®—æœºèƒœ %d å±€,è´Ÿ %d å±€   å’Œæ£‹ %d å±€   çŽ©å®¶å’Œè®¡ç®—æœºæš‚æ—¶æ‰“å¹³   æ€»å…± %d å±€\nå¦‚éœ€è¿›å…¥é€‰é¡¹é¡µé¢,è¯·é”®å…¥ 4,4\n",PLAYER.points,AI.points,AI.points,PLAYER.points,NONE.points,total);
 
 }
 
 void show_help()
 {
     clean_screen();
-    puts("¾®×ÖÆå°ïÖú");
+    puts("äº•å­—æ£‹å¸®åŠ©");
     putchar('\n');
-    puts("°´ÈÎÒâ¼üÍË³ö°ïÖú¡£");
+    puts("æŒ‰ä»»æ„é”®é€€å‡ºå¸®åŠ©ã€‚");
     putchar('\n');
-    puts("¶ÔÞÄ·½·¨:");
-    puts("    ÊäÈëºá×Ý×ø±êÒÔ¶¨Î»Æå×ÓÂäÎ»ÖÃ¡£ÏÈÊäÈëÐÐºÅ£¬·Ö¸ô·û°ë½Ç¶ººÅ(,)×Ô¶¯Ìí¼Ó£¬È»ºóÊäÈëÁÐºÅ£¬³ÌÐò½«»á×Ô¶¯Âä×Ó¡£");
+    puts("å¯¹å¼ˆæ–¹æ³•:");
+    puts("    è¾“å…¥æ¨ªçºµåæ ‡ä»¥å®šä½æ£‹å­è½ä½ç½®ã€‚å…ˆè¾“å…¥è¡Œå·ï¼Œåˆ†éš”ç¬¦åŠè§’é€—å·(,)è‡ªåŠ¨æ·»åŠ ï¼Œç„¶åŽè¾“å…¥åˆ—å·ï¼Œç¨‹åºå°†ä¼šè‡ªåŠ¨è½å­ã€‚");
     putchar('\n');
     puts("   1    2    3");
-    puts("1  ¡Ì |    |   ");
+    puts("1  âˆš |    |   ");
     puts("  --------------");
-    puts("2  ¡Á | ¡Á | ©–");
+    puts("2  Ã— | Ã— | ã€‡");
     puts("  --------------");
-    puts("3     |    | ¡Ì");
-    puts("       Í¼1");
+    puts("3     |    | âˆš");
+    puts("       å›¾1");
     putchar('\n');
-    puts("    ÈçÍ¼1£¬Èç¹ûÄúÏëÂä×ÓÓÚÔ²È¦(©–)´¦£¬ÄúÓ¦µ¥»÷¼üÅÌÉÏµÄÊý×Ö2£¬³ÌÐò»á×Ô¶¯Ìí¼Ó°ë½Ç¶ººÅ(,)£¬È»ºóµ¥»÷¼üÅÌÉÏµÄÊý×Ö3£¬³ÌÐò×Ô¶¯Âä×Ó¡£");
+    puts("    å¦‚å›¾1ï¼Œå¦‚æžœæ‚¨æƒ³è½å­äºŽåœ†åœˆ(ã€‡)å¤„ï¼Œæ‚¨åº”å•å‡»é”®ç›˜ä¸Šçš„æ•°å­—2ï¼Œç¨‹åºä¼šè‡ªåŠ¨æ·»åŠ åŠè§’é€—å·(,)ï¼Œç„¶åŽå•å‡»é”®ç›˜ä¸Šçš„æ•°å­—3ï¼Œç¨‹åºè‡ªåŠ¨è½å­ã€‚");
     putchar('\n');
-    puts("ÓÎÏ·¹æÔò£º");
-    puts("    ÓëÏÖÊµÖÐµÄ¾®×ÖÆå¹æÔòÏàÍ¬¡£ÈçÓÐÒ»·½ºá¡¢×Ý»òÐ±µÄÆå×ÓÐÎ³ÉÒ»ÌõÏß¼´¿ÉÊ¤Àû¡£");
+    puts("æ¸¸æˆè§„åˆ™ï¼š");
+    puts("    ä¸ŽçŽ°å®žä¸­çš„äº•å­—æ£‹è§„åˆ™ç›¸åŒã€‚å¦‚æœ‰ä¸€æ–¹æ¨ªã€çºµæˆ–æ–œçš„æ£‹å­å½¢æˆä¸€æ¡çº¿å³å¯èƒœåˆ©ã€‚");
     putchar('\n');
-    puts("°´ÈÎÒâ¼üÍË³ö°ïÖú¡£");
+    puts("æŒ‰ä»»æ„é”®é€€å‡ºå¸®åŠ©ã€‚");
     getch();
     show_default(0,0);
-    puts("ÊäÈëºá×Ý×ø±ê£¬¶ººÅ(,)×Ô¶¯Ìí¼Ó");
+    puts("è¾“å…¥æ¨ªçºµåæ ‡ï¼Œé€—å·(,)è‡ªåŠ¨æ·»åŠ ");
 }
 
 int change_first(void)
 {
     int select;
     clean_screen();
-    puts("¸ü¸ÄÏÈÏÂ·½¿ÉÄÜ»áÖØÖÃÆåÅÌ¡£ÊÇ·ñ¼ÌÐø?");
-    puts("1.ÊÇ 2.·ñ");
-    printf("ÇëÑ¡Ôñ:_\b");
+    puts("æ›´æ”¹å…ˆä¸‹æ–¹å¯èƒ½ä¼šé‡ç½®æ£‹ç›˜ã€‚æ˜¯å¦ç»§ç»­?");
+    puts("1.æ˜¯ 2.å¦");
+    printf("è¯·é€‰æ‹©:_\b");
     while(((select=getchr()-'0'),1)&&((select>2)||(select<1)))
     {
         clean_screen();
         //clean_buffer();
-        puts("ÊäÈë´íÎó!Çë°´ÌáÊ¾ÊäÈë!\a");
-        puts("¸ü¸ÄÏÈÏÂ·½½«ÖØÖÃÆåÅÌ¡£ÊÇ·ñ¼ÌÐø?");
-        puts("1.ÊÇ 2.·ñ");
-        printf("ÇëÑ¡Ôñ:_\b");
+        puts("è¾“å…¥é”™è¯¯!è¯·æŒ‰æç¤ºè¾“å…¥!\a");
+        puts("æ›´æ”¹å…ˆä¸‹æ–¹å°†é‡ç½®æ£‹ç›˜ã€‚æ˜¯å¦ç»§ç»­?");
+        puts("1.æ˜¯ 2.å¦");
+        printf("è¯·é€‰æ‹©:_\b");
     }
     //clean_buffer();
     clean_screen();
     if(select==1)
     {
-        printf("ÏÖÔÚÏÈÏÂ·½: %s \nÄ¬ÈÏÏÈÏÂ·½: %s\n",((first==PLAYER.num)?"Íæ¼Ò":"¼ÆËã»ú"),"Íæ¼Ò");
-        puts("1.Íæ¼Ò 2.¼ÆËã»ú 3.·µ»Ø");
-        printf("ÄúÏë°ÑÏÈÏÂ·½¸ü¸ÄÎª:_\b");
+        printf("çŽ°åœ¨å…ˆä¸‹æ–¹: %s \né»˜è®¤å…ˆä¸‹æ–¹: %s\n",((first==PLAYER.num)?"çŽ©å®¶":"è®¡ç®—æœº"),"çŽ©å®¶");
+        puts("1.çŽ©å®¶ 2.è®¡ç®—æœº 3.è¿”å›ž");
+        printf("æ‚¨æƒ³æŠŠå…ˆä¸‹æ–¹æ›´æ”¹ä¸º:_\b");
         while(((select=getchr()-'0'),1)&&((select>3)||(select<1)))
         {
             //clean_buffer();
             clean_screen();
-            puts("ÊäÈë´íÎó!Çë°´ÌáÊ¾ÊäÈë!\a");
-            printf("ÏÖÔÚÏÈÏÂ·½: %s \n Ä¬ÈÏÏÈÏÂ·½: %s\n",((first==PLAYER.num)?"Íæ¼Ò":"¼ÆËã»ú"),"Íæ¼Ò");
-            puts("1.Íæ¼Ò 2.¼ÆËã»ú 3.·µ»Ø");
-            printf("ÄúÏë°ÑÏÈÏÂ·½¸ü¸ÄÎª:_\b");
+            puts("è¾“å…¥é”™è¯¯!è¯·æŒ‰æç¤ºè¾“å…¥!\a");
+            printf("çŽ°åœ¨å…ˆä¸‹æ–¹: %s \n é»˜è®¤å…ˆä¸‹æ–¹: %s\n",((first==PLAYER.num)?"çŽ©å®¶":"è®¡ç®—æœº"),"çŽ©å®¶");
+            puts("1.çŽ©å®¶ 2.è®¡ç®—æœº 3.è¿”å›ž");
+            printf("æ‚¨æƒ³æŠŠå…ˆä¸‹æ–¹æ›´æ”¹ä¸º:_\b");
         }
         switch(select)
         {
